@@ -60,7 +60,9 @@ cn_ip_face = "FaceSwap"
 cn_canny = "PyraCanny"
 cn_cpds = "CPDS"
 
+# IA-2024-07
 ip_list = [cn_ip, cn_canny, cn_cpds, cn_ip_face]
+ip_list_mod = [cn_ip, cn_canny, cn_cpds]
 default_ip = cn_ip
 
 default_parameters = {

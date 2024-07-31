@@ -16,20 +16,30 @@ def auth_list_to_dict(auth_list):
     return auth_dict
 
 
+def role_list_to_dict(auth_list):
+    role_dict = {}
+    for auth_data in auth_list:
+        if 'user' in auth_data:
+            role_dict |= {auth_data['user']: auth_data['role']}
+    return role_dict
+
+
 def load_auth_data(filename=None):
     auth_dict = None
+    role_dict = None
     if filename != None and exists(filename):
         with open(filename, encoding='utf-8') as auth_file:
             try:
                 auth_obj = json.load(auth_file)
                 if isinstance(auth_obj, list) and len(auth_obj) > 0:
                     auth_dict = auth_list_to_dict(auth_obj)
+                    role_dict = role_list_to_dict(auth_obj)
             except Exception as e:
                 print('load_auth_data, e: ' + str(e))
-    return auth_dict
+    return auth_dict, role_dict
 
 
-auth_dict = load_auth_data(constants.AUTH_FILENAME)
+auth_dict, role_dict = load_auth_data(constants.AUTH_FILENAME)
 
 auth_enabled = auth_dict != None
 
@@ -37,5 +47,12 @@ auth_enabled = auth_dict != None
 def check_auth(user, password):
     if user not in auth_dict:
         return False
-    else:   
+    else:
         return hashlib.sha256(bytes(password, encoding='utf-8')).hexdigest() == auth_dict[user]
+
+
+def check_role(user):
+    if user not in role_dict:
+        return False
+    else:
+        return role_dict[user]
